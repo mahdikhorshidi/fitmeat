@@ -1,0 +1,189 @@
+{
+  "schema": "fitmeat/v1",
+  "name": "پوش / پول / پا — ۴ هفته",
+  "note": "برنامهٔ هایپرتروفی سه‌روزه با پیشرفت دوگانه و هفتهٔ چهارم دیلود.",
+  "defaults": { "rest": 90, "tempo": "3-1-1-0", "unit": "kg" },
+  "weeks": {
+    "count": 4,
+    "progression": { "type": "double", "increment": 2.5 },
+    "deload": { "week": 4, "volume": 0.6, "intensity": 0.9 }
+  },
+  "days": [
+    {
+      "id": "push",
+      "name": "پوش — سینه، سرشانه، پشت‌بازو",
+      "defaults": { "rest": 120 },
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 4,
+          "exercises": [{
+            "name": "پرس سینه هالتر",
+            "muscle": "سینه",
+            "equipment": "هالتر",
+            "reps": "6-8",
+            "weight": 60,
+            "rpe": 8,
+            "cue": "کتف جمع و قفل، آرنج حدود ۴۵ درجه، میله روی خط سینه.",
+            "alternatives": ["پرس سینه دمبل", "پرس سینه اسمیت"]
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 90,
+          "exercises": [{
+            "name": "پرس بالاسینه دمبل",
+            "muscle": "سینه",
+            "equipment": "دمبل",
+            "reps": "8-10",
+            "weight": 22,
+            "alternatives": ["پرس بالاسینه هالتر"]
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 75,
+          "exercises": [{
+            "name": "سرشانه دمبل نشسته",
+            "muscle": "سرشانه",
+            "equipment": "دمبل",
+            "reps": "10-12",
+            "weight": 16,
+            "tempo": "2-0-1-0"
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [{
+            "name": "پشت‌بازو سیم‌کش",
+            "muscle": "پشت‌بازو",
+            "equipment": "سیم‌کش",
+            "reps": "12-15",
+            "weight": 25,
+            "technique": { "type": "drop", "drops": [{ "reduce": "25%", "reps": "AMRAP" }] }
+          }]
+        }
+      ]
+    },
+    {
+      "id": "pull",
+      "name": "پول — پشت و جلوبازو",
+      "defaults": { "rest": 105 },
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 4,
+          "exercises": [{
+            "name": "بارفیکس",
+            "muscle": "زیربغل",
+            "equipment": "بدن",
+            "reps": "6-10",
+            "cue": "بدون تاب، شانه پایین و عقب، تا چانه بالای میله."
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 4,
+          "exercises": [{
+            "name": "زیربغل هالتر خم",
+            "muscle": "زیربغل",
+            "equipment": "هالتر",
+            "reps": "8-10",
+            "weight": 55,
+            "rpe": 8,
+            "alternatives": ["زیربغل دمبل تک‌دست", "قایقی سیم‌کش"]
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 75,
+          "exercises": [{
+            "name": "فیس‌پول",
+            "muscle": "پشت سرشانه",
+            "equipment": "سیم‌کش",
+            "reps": "15",
+            "weight": 20
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [{
+            "name": "جلوبازو دمبل",
+            "muscle": "جلوبازو",
+            "equipment": "دمبل",
+            "reps": "10-12",
+            "weight": 14,
+            "technique": { "type": "restPause", "pauses": 2, "rest": 15 }
+          }]
+        }
+      ]
+    },
+    {
+      "id": "legs",
+      "name": "پا و شکم",
+      "defaults": { "rest": 150 },
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 4,
+          "exercises": [{
+            "name": "اسکوات هالتر",
+            "muscle": "چهارسر",
+            "equipment": "هالتر",
+            "reps": "5",
+            "intensity": "80%",
+            "oneRM": 100,
+            "tempo": "3-1-1-0",
+            "cue": "زانو هم‌راستای پنجه، عمق تا موازی یا کمی پایین‌تر."
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 120,
+          "exercises": [{
+            "name": "ددلیفت رومانیایی",
+            "muscle": "همسترینگ",
+            "equipment": "هالتر",
+            "reps": "8",
+            "weight": 70,
+            "alternatives": ["ددلیفت رومانیایی دمبل"]
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [{
+            "name": "پرس پا",
+            "muscle": "چهارسر",
+            "equipment": "دستگاه",
+            "sets": [
+              { "reps": 12, "weight": 120 },
+              { "reps": 10, "weight": 140 },
+              { "reps": 8, "weight": 160 }
+            ]
+          }]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "rest": 60,
+          "restBetweenExercises": 15,
+          "exercises": [
+            { "name": "پلانک", "mode": "time", "muscle": "شکم", "duration": 45 },
+            { "name": "کرانچ معکوس", "muscle": "شکم", "reps": "15" },
+            { "name": "کشش همسترینگ نشسته", "mode": "time", "muscle": "کشش", "duration": 30 }
+          ]
+        }
+      ]
+    }
+  ]
+}

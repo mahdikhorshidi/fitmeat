@@ -1,0 +1,77 @@
+{
+  "schema": "fitmeat/v1",
+  "name": "روز هوازی و اینتروال",
+  "note": "ترکیب هوازی پیوسته، اینتروال و شکم.",
+  "defaults": { "rest": 60, "unit": "kg" },
+  "days": [
+    {
+      "id": "cardio",
+      "name": "هوازی — تردمیل و دوچرخه",
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 1,
+          "exercises": [{
+            "name": "تردمیل — گرم‌کردن",
+            "mode": "cardio",
+            "equipment": "تردمیل",
+            "duration": 480,
+            "speed": 6,
+            "incline": 2,
+            "hrZone": "۱۱۰-۱۲۵"
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 1,
+          "exercises": [{
+            "name": "اینتروال تردمیل",
+            "mode": "cardio",
+            "equipment": "تردمیل",
+            "hrZone": "۱۵۰-۱۷۰",
+            "cue": "در فاز تند نفس عمیق و ریتمیک؛ در فاز آرام پیاده‌روی نکن، آهسته بدو.",
+            "intervals": {
+              "rounds": 6,
+              "work": { "duration": 60, "speed": 12 },
+              "recover": { "duration": 120, "speed": 7 }
+            }
+          }]
+        },
+        {
+          "type": "single",
+          "rounds": 1,
+          "exercises": [{
+            "name": "دوچرخه ثابت",
+            "mode": "cardio",
+            "equipment": "دوچرخه",
+            "duration": 600,
+            "distance": 4000,
+            "hrZone": "۱۲۰-۱۳۵",
+            "alternatives": ["الپتیکال", "روئینگ"]
+          }]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "rest": 45,
+          "restBetweenExercises": 10,
+          "exercises": [
+            { "name": "پلانک پهلو", "mode": "time", "muscle": "شکم", "duration": 30 },
+            { "name": "بالا آوردن پا خوابیده", "muscle": "شکم", "reps": "15" }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 1,
+          "exercises": [{
+            "name": "سردکردن و کشش کل بدن",
+            "mode": "time",
+            "muscle": "کشش",
+            "duration": 300,
+            "cue": "هر کشش حدود ۳۰ ثانیه، بدون درد."
+          }]
+        }
+      ]
+    }
+  ]
+}

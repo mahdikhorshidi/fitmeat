@@ -1,0 +1,71 @@
+{
+  "schema": "fitmeat/v1",
+  "name": "سوپرست بالاتنه + شکم و کشش",
+  "note": "جلسهٔ کوتاه و پرتراکم؛ مناسب باشگاه شلوغ.",
+  "defaults": { "rest": 75, "tempo": "2-0-1-0", "unit": "kg" },
+  "days": [
+    {
+      "id": "upper",
+      "name": "بالاتنه سوپرست",
+      "blocks": [
+        {
+          "type": "superset",
+          "rounds": 4,
+          "rest": 90,
+          "restBetweenExercises": 15,
+          "note": "بدون استراحت بین A1 و A2.",
+          "exercises": [
+            {
+              "name": "پرس سینه دمبل",
+              "muscle": "سینه",
+              "equipment": "دمبل",
+              "reps": "10",
+              "weight": 24,
+              "alternatives": ["پرس سینه هالتر", "شنا سوئدی"]
+            },
+            {
+              "name": "زیربغل دمبل تک‌دست",
+              "muscle": "زیربغل",
+              "equipment": "دمبل",
+              "reps": "10",
+              "weight": 26
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "rounds": 3,
+          "rest": 75,
+          "restBetweenExercises": 10,
+          "exercises": [
+            { "name": "نشر جانب", "muscle": "سرشانه", "equipment": "دمبل", "reps": "15", "weight": 8 },
+            { "name": "پشت‌بازو دیپ روی نیمکت", "muscle": "پشت‌بازو", "equipment": "بدن", "reps": "12" }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "rest": 45,
+          "restBetweenExercises": 10,
+          "exercises": [
+            { "name": "پلانک ساعد", "mode": "time", "muscle": "شکم", "duration": 45, "cue": "لگن جمع، بدن یک خط." },
+            { "name": "کوهنورد", "mode": "time", "muscle": "شکم", "duration": 30 },
+            { "name": "درازنشست قیچی", "muscle": "شکم", "reps": "20" }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "rest": 0,
+          "restBetweenExercises": 5,
+          "note": "کشش پایانی — هر حرکت یک‌بار.",
+          "exercises": [
+            { "name": "کشش سینه کنار دیوار", "mode": "time", "muscle": "کشش", "duration": 30 },
+            { "name": "کشش زیربغل نشسته", "mode": "time", "muscle": "کشش", "duration": 30 },
+            { "name": "کشش گربه-شتر", "mode": "time", "muscle": "کشش", "duration": 40 }
+          ]
+        }
+      ]
+    }
+  ]
+}
