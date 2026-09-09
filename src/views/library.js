@@ -10,6 +10,7 @@ const SAMPLES = [
   { file: 'samples/push-pull-legs.json', name: 'پوش/پول/پا — ۴ هفته' },
   { file: 'samples/superset-core.json', name: 'سوپرست بالاتنه + شکم و کشش' },
   { file: 'samples/cardio-intervals.json', name: 'روز هوازی و اینتروال' },
+  { file: 'samples/chest-biceps-day1.json', name: 'سینه و جلوبازو — روز ۱' },
 ];
 
 export function libraryView() {

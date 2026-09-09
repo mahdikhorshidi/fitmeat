@@ -1,5 +1,5 @@
 // کش کردن فایل‌های اپ برای کار آفلاین در باشگاه
-const VERSION = 'fitmeat-v1';
+const VERSION = 'fitmeat-v2';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest', './assets/styles.css',
   './src/app.js', './src/router.js', './src/store.js', './src/schema.js', './src/util.js',
@@ -8,7 +8,7 @@ const ASSETS = [
   './src/views/shell.js', './src/views/library.js', './src/views/program.js',
   './src/views/gym.js', './src/views/editor.js', './src/views/history.js', './src/views/settings.js',
   './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
-  './samples/push-pull-legs.json', './samples/superset-core.json', './samples/cardio-intervals.json',
+  './samples/push-pull-legs.json', './samples/superset-core.json', './samples/cardio-intervals.json', './samples/chest-biceps-day1.json',
 ];
 
 self.addEventListener('install', e => {

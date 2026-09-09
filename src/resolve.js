@@ -89,7 +89,7 @@ function resolveExercise(ex, ctx) {
   };
 }
 
-const MARK = 'ABCDEFGH';
+const MARK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 /** برچسب A1/A2 برای سوپرست، A برای بلوک تکی */
 export function markOf(blockIndex, exIndex, type) {
