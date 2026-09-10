@@ -9,6 +9,11 @@ import { settingsView } from './views/settings.js';
 import { store } from './store.js';
 import { confirmSheet } from './ui.js';
 import { primeAudio } from './timer.js';
+import { applyTheme, watchSystemTheme } from './theme.js';
+
+// تم را پیش از اولین رندر اعمال کن تا صفحه یک‌بار سفید/سیاه پرش نکند
+applyTheme();
+watchSystemTheme();
 
 route('/', libraryView);
 route('/p/:id', programView);

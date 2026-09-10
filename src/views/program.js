@@ -2,15 +2,21 @@
 import { shell, emptyState } from './shell.js';
 import { store } from '../store.js';
 import { resolveProgram, estimateDuration, countSets } from '../resolve.js';
-import { condenseBlock, mergeBlocks, weekDeltas, TECH_LABEL } from '../condense.js';
-import { esc, fa, num, dur, safeUrl } from '../util.js';
-import { sheet, toast } from '../ui.js';
+import { condenseBlock, mergeBlocks, weekDeltas } from '../condense.js';
+import { esc, fa, num, durShort, clockOfDay } from '../util.js';
+import { sheet } from '../ui.js';
+import { adviceCard } from '../daily.js';
+import { exerciseSheet, techniqueText } from './exercise.js';
+import { lookup } from '../exdb.js';
+import { muscleName } from '../muscles.js';
 
 const weekState = new Map();
 export const weekOf = id => weekState.get(id) || 1;
 const setWeek = (id, w) => weekState.set(id, w);
 
 const detail = new Map();   // نمای فشرده/کامل هر روز
+
+export { techniqueText };
 
 export function programView({ id }) {
   const p = store.program(id);
@@ -36,7 +42,7 @@ export function programView({ id }) {
 
       ${model.weeks > 1 ? `
       <div>
-        <div class="small muted" style="margin-bottom:6px">هفته</div>
+        <div class="sec-title" style="margin-bottom:6px">هفته</div>
         <div class="scroller">
           ${Array.from({ length: model.weeks }, (_, i) => i + 1).map(w => `
             <button class="chip ${w === week ? 'on' : ''}" data-week="${w}">
@@ -44,6 +50,8 @@ export function programView({ id }) {
             </button>`).join('')}
         </div>
       </div>` : ''}
+
+      <button class="btn block" data-overview>🗺️ نمای کلی هفته — همهٔ روزها در یک جدول</button>
 
       <div class="stack">
         ${model.days.map(d => dayCard(id, d)).join('')}
@@ -54,6 +62,7 @@ export function programView({ id }) {
   root.querySelectorAll('[data-week]').forEach(b => {
     b.onclick = () => { setWeek(id, +b.dataset.week); programView({ id }); };
   });
+  root.querySelector('[data-overview]').onclick = () => overviewSheet(model, week);
   root.querySelectorAll('[data-day]').forEach(b => {
     b.onclick = () => { location.hash = `/p/${id}/d/${b.dataset.day}`; };
   });
@@ -71,20 +80,59 @@ function isDeloadWeek(p, w) {
 
 function dayCard(pid, d) {
   const sets = countSets(d);
-  const mins = Math.round(estimateDuration(d) / 60);
+  const secs = estimateDuration(d);
   const muscles = [...new Set(d.blocks.flatMap(b => b.exercises.map(e => e.muscle).filter(Boolean)))];
+  const ss = d.blocks.filter(b => b.type !== 'single').length;
   return `<div class="card" data-day="${esc(d.id)}" role="button" tabindex="0">
     <div class="row">
       <div style="flex:1;min-width:0">
         <h3 style="font-size:16px">${esc(d.name)}</h3>
-        <div class="small muted">${fa(sets)} ست · حدود ${fa(mins)} دقیقه</div>
-        ${muscles.length ? `<div class="row wrap" style="gap:6px;margin-top:8px">
-          ${muscles.slice(0, 4).map(m => `<span class="chip">${esc(m)}</span>`).join('')}</div>` : ''}
+        <div class="small muted">${fa(sets)} ست · حدود ${fa(Math.round(secs / 60))} دقیقه · پایان حدود ${clockOfDay(Date.now() + secs * 1000)}</div>
+        <div class="row wrap" style="gap:6px;margin-top:8px">
+          ${ss ? `<span class="chip accent">${fa(ss)} بلوک سوپرست</span>` : ''}
+          ${muscles.slice(0, 4).map(m => `<span class="chip">${esc(m)}</span>`).join('')}
+        </div>
       </div>
       <button class="btn primary sm" data-gym="${esc(d.id)}">شروع</button>
     </div>
   </div>`;
 }
+
+/* ---------- نمای کلی هفته ---------- */
+
+function overviewSheet(model, week) {
+  const cols = model.days.map(d => {
+    const items = mergeBlocks(d.blocks).flatMap(b => b.exercises.map(ex => {
+      const g = groupSize(b);
+      return `<li><b>${esc(ex._mark || '')}</b><span style="min-width:0">${esc(ex.name)}
+        <span class="muted"> — ${esc(shortDose(b, ex))}</span></span></li>`;
+    }));
+    return `<td><div class="daycol">
+      <div style="font-weight:800;font-size:12.5px;margin-bottom:6px">${esc(d.name)}</div>
+      <div class="small muted" style="margin-bottom:6px">${fa(countSets(d))} ست · ${fa(Math.round(estimateDuration(d) / 60))}′</div>
+      <ul>${items.join('')}</ul>
+    </div></td>`;
+  }).join('');
+
+  sheet(`نمای کلی — هفتهٔ ${fa(week)}`, `
+    <div class="weekgrid">
+      <table><thead><tr>${model.days.map(d => `<th>${esc(d.name)}</th>`).join('')}</tr></thead>
+      <tbody><tr>${cols}</tr></tbody></table>
+    </div>
+    <p class="tiny muted" style="margin-top:10px">برای دیدن جزئیات هر روز، روی کارت آن روز بزن.</p>`);
+}
+
+const groupSize = b => (b.type === 'single' ? 1 : b.exercises.length);
+
+function shortDose(block, ex) {
+  const n = block.type === 'single' ? ex.sets.length : (block.rounds || 1);
+  if (ex.mode === 'cardio') return `${fa(n)}×`;
+  const s = ex.sets[0] || {};
+  const core = ex.mode === 'time' ? durShort(s.duration) : fa(s.reps ?? '—');
+  return `${fa(n)}×${core}${s.weight != null ? `@${fa(num(s.weight))}` : ''}`;
+}
+
+/* ---------- نمای روز ---------- */
 
 export function dayView({ id, dayId }) {
   const p = store.program(id);
@@ -97,19 +145,30 @@ export function dayView({ id, dayId }) {
 
   const deltas = week > 1 ? weekDeltas(model, resolveProgram(p, week - 1, settings)) : new Map();
   const full = detail.get(dayId) || false;
+  const secs = estimateDuration(day);
 
   const body = `
     <div class="stack">
+      <div class="timeline">
+        <div class="t-cell"><div class="v">${clockOfDay(Date.now())}</div><div class="k">اگر الان شروع کنی</div></div>
+        <div class="t-cell t-mid"><div class="v">${fa(Math.round(secs / 60))}′</div><div class="k">مدت تخمینی</div></div>
+        <div class="t-cell"><div class="v">${clockOfDay(Date.now() + secs * 1000)}</div><div class="k">پایان تخمینی</div></div>
+      </div>
+
+      ${settings.showAdvice ? adviceCard(day) : ''}
+
       <div class="row wrap">
-        <button class="chip ${full ? '' : 'on'}" data-view="0">فشرده</button>
-        <button class="chip ${full ? 'on' : ''}" data-view="1">کامل</button>
+        <div class="seg">
+          <button data-view="0" class="${full ? '' : 'on'}">فشرده</button>
+          <button data-view="1" class="${full ? 'on' : ''}">ست‌به‌ست</button>
+        </div>
         <span class="spacer"></span>
         <span class="chip">${fa(countSets(day))} ست</span>
-        <span class="chip">${fa(Math.round(estimateDuration(day) / 60))} دقیقه</span>
       </div>
+
       ${day.note ? `<div class="hint">${esc(day.note)}</div>` : ''}
       ${mergeBlocks(day.blocks).map(b => blockTable(b, deltas, full)).join('')}
-      <button class="btn primary block" data-gym>شروع مود باشگاه</button>
+      <button class="btn primary block lg" data-gym>شروع مود باشگاه</button>
     </div>`;
 
   const root = shell({ title: day.name, sub: `${model.name} · هفتهٔ ${fa(week)}`, back: `/p/${id}`, body });
@@ -125,71 +184,147 @@ export function dayView({ id, dayId }) {
   });
 }
 
+/* ---------- جدول بلوک ---------- */
+
 function blockTable(block, deltas, full) {
   const c = condenseBlock(block);
   const label = block.type === 'single' ? 'تکی' : (block.type === 'superset' ? 'سوپرست' : 'سیرکویت');
-  const rows = full ? fullRows(block, deltas) : condensedRows(c, deltas);
+  const grouped = block.type !== 'single';
+
   return `<div class="block">
     <div class="block-head">
       <span class="tag ${block.type}">${label}</span>
+      ${grouped ? `<span class="meta">${esc(groupLabel(block))}</span>` : ''}
       ${c.header.map(h => `<span class="meta">${esc(h.text)}</span>`).join('<span class="meta">·</span>')}
     </div>
     ${block.note ? `<div class="small muted" style="padding:8px 14px 0">${esc(block.note)}</div>` : ''}
     <div class="tablewrap">
       <table class="plan">
         <thead><tr>
+          ${grouped ? '<th class="rail"><span class="sr">گروه</span></th>' : ''}
           <th class="ex">حرکت</th>
-          <th>${full ? 'ست' : 'ست‌ها و پارامترها'}</th>
+          <th>ست</th>
+          <th>تکرار</th>
+          <th>وزنه</th>
+          <th>استراحت</th>
         </tr></thead>
-        <tbody>${rows}</tbody>
+        <tbody>${full ? fullRows(block, deltas, grouped) : condensedRows(block, c, deltas, grouped)}</tbody>
       </table>
     </div>
   </div>`;
 }
 
-function condensedRows(c, deltas) {
-  return c.rows.map(r => {
-    // هر تکه در bdi تا اعداد/حروف لاتین ترتیب جملهٔ راست‌چین را به‌هم نریزند
-    const meta = [r.rest, r.tempo, r.effort, r.alts].filter(Boolean)
-      .map(t => `<bdi>${esc(t)}</bdi>`).join(' · ');
-    return `<tr>
+/** «A1+A2+A3 با هم، ۴ دور» — تا کاربر بفهمد دقیقاً چه چیزی با چه چیزی جفت است */
+function groupLabel(block) {
+  const marks = block.exercises.map((e, i) => e._mark || `${'ABCDEFGH'[block.index % 8]}${i + 1}`);
+  return `${marks.join(' + ')} با هم · ${fa(block.rounds || block.exercises[0]?.sets.length || 1)} دور`;
+}
+
+function railCell(i, n) {
+  const cls = n < 2 ? '' : i === 0 ? 'g-start' : i === n - 1 ? 'g-end' : 'g-mid';
+  return { cls, cell: '<td class="rail"><i></i></td>' };
+}
+
+function condensedRows(block, c, deltas, grouped) {
+  const n = block.exercises.length;
+  return c.rows.map((r, i) => {
+    const rail = railCell(i, grouped ? n : 1);
+    const ex = r.ex;
+    const s = ex.sets[0] || {};
+    const setsTxt = block.type === 'single' ? fa(ex.sets.length) : `${fa(block.rounds || 1)} دور`;
+    return `<tr class="${grouped ? (block.type === 'circuit' ? rail.cls.replace('g-', 'c-') : rail.cls) : ''} ${i % 2 ? 'alt' : ''}">
+      ${grouped ? rail.cell : ''}
       <td class="ex">
-        <button class="ex-name" data-ex="${esc(r.key)}" style="text-align:start">
-          <span class="ex-mark">${esc(r.mark)}</span><span>${esc(r.name)}</span>
+        <button class="ex-name" data-ex="${esc(r.key)}">
+          <span class="ex-mark ${grouped ? (block.type === 'circuit' ? 'circuit' : 'grouped') : ''}">${esc(r.mark)}</span>
+          <span>${esc(r.name)}</span>
         </button>
-        ${r.sub ? `<div class="ex-sub">${esc(r.sub)}</div>` : ''}
+        <div class="ex-sub">${esc(subLine(ex))}</div>
+        ${tags(r)}
       </td>
-      <td>
-        <div class="dose">${esc(r.dose)}${deltaBadge(deltas.get(r.key))}</div>
-        ${meta ? `<div class="ex-sub">${meta}</div>` : ''}
-        ${r.chips.length ? `<div class="row wrap" style="gap:5px;margin-top:6px">
-          ${r.chips.map(ch => `<span class="chip ${ch.cls}">${esc(ch.text)}</span>`).join('')}</div>` : ''}
-      </td>
+      <td class="n">${setsTxt}</td>
+      <td class="n">${esc(repsCell(ex))}${deltaBadge(deltas.get(r.key))}</td>
+      <td class="n">${esc(weightCell(ex))}</td>
+      <td class="n">${esc(restCell(block, ex))}</td>
     </tr>`;
   }).join('');
 }
 
-function fullRows(block, deltas) {
+function fullRows(block, deltas, grouped) {
+  const n = block.exercises.length;
   return block.exercises.map((ex, ei) => {
+    const rail = railCell(ei, grouped ? n : 1);
     const mark = ex._mark ?? ('ABCDEFGH'[block.index % 8] + (block.type === 'single' ? '' : ei + 1));
-    return ex.sets.map((s, si) => `<tr>
+    return ex.sets.map((s, si) => `<tr class="${si === 0 ? (grouped ? (block.type === 'circuit' ? rail.cls.replace('g-', 'c-') : rail.cls) : '') : ''} ${ei % 2 ? 'alt' : ''}">
+      ${grouped ? (si === 0 ? rail.cell : '<td class="rail"><i></i></td>') : ''}
       <td class="ex">${si === 0 ? `
-        <div class="ex-name"><span class="ex-mark">${esc(mark)}</span><span>${esc(ex.name)}</span></div>
-        ${ex.muscle ? `<div class="ex-sub">${esc(ex.muscle)}</div>` : ''}` : '<span class="muted small">↳</span>'}
+        <button class="ex-name" data-ex="${esc(ex.key)}">
+          <span class="ex-mark ${grouped ? (block.type === 'circuit' ? 'circuit' : 'grouped') : ''}">${esc(mark)}</span>
+          <span>${esc(ex.name)}</span>
+        </button>
+        <div class="ex-sub">${esc(subLine(ex))}</div>` : '<span class="muted small">↳</span>'}
       </td>
-      <td class="dose">${esc(setText(ex, s, si))}${si === 0 ? deltaBadge(deltas.get(ex.key)) : ''}</td>
+      <td class="n">${fa(si + 1)}</td>
+      <td class="n">${esc(setCore(ex, s))}${si === 0 ? deltaBadge(deltas.get(ex.key)) : ''}</td>
+      <td class="n">${s.weight != null ? `${fa(num(s.weight))}${esc(ex.unit || 'kg')}` : '—'}</td>
+      <td class="n">${s.rest ? esc(durShort(s.rest)) : '—'}</td>
     </tr>`).join('');
   }).join('');
 }
 
-function setText(ex, s, i) {
-  const unit = ex.unit || 'kg';
-  const core = ex.mode === 'time' ? dur(s.duration)
-    : ex.mode === 'cardio' ? [s.duration && dur(s.duration), s.distance && `${fa(num(s.distance))}م`, s.speed && `${fa(num(s.speed))}km/h`].filter(Boolean).join(' · ')
-    : fa(s.reps ?? '—');
-  const load = s.weight != null ? ` @ ${fa(num(s.weight))}${unit}` : '';
-  const rest = s.rest ? ` · استراحت ${dur(s.rest)}` : '';
-  return `ست ${fa(i + 1)}: ${core}${load}${rest}`;
+/** چیپ‌های حرکت (تکنیک، شدت، تمپو، جایگزین) — داخل ستون حرکت تا جدول باریک بماند */
+function tags(r) {
+  const list = [
+    ...(r.effort ? [{ text: r.effort, cls: '' }] : []),
+    ...(r.tempo ? [{ text: r.tempo, cls: '' }] : []),
+    ...r.chips,
+    ...(r.alts ? [{ text: r.alts, cls: '' }] : []),
+  ];
+  if (!list.length) return '';
+  return `<div class="row wrap" style="gap:4px;margin-top:5px">
+    ${list.map(c => `<span class="chip" style="padding:2px 8px;font-size:10.5px">${esc(c.text)}</span>`).join('')}
+  </div>`;
+}
+
+/** زیرنویس حرکت: عضلهٔ اصلی از دانش‌نامه، وگرنه فیلد muscle خود برنامه */
+function subLine(ex) {
+  const kb = lookup(ex.name, { muscle: ex.muscle, mode: ex.mode, equipment: ex.equipment });
+  const top = Object.entries(kb.primary || {}).sort((a, b) => b[1] - a[1])[0];
+  const m = top ? muscleName(top[0]) : ex.muscle;
+  return [m, ex.equipment || kb.equip].filter(Boolean).join(' · ');
+}
+
+function setCore(ex, s) {
+  if (ex.mode === 'time') return durShort(s.duration);
+  if (ex.mode === 'cardio') {
+    return [s.duration && durShort(s.duration), s.distance && `${fa(num(s.distance))}م`,
+      s.speed && `${fa(num(s.speed))}km/h`].filter(Boolean).join(' · ') || '—';
+  }
+  return fa(s.reps ?? '—');
+}
+
+/** اگر همهٔ ست‌ها یکسان‌اند یک مقدار، وگرنه «۱۲/۱۰/۸» */
+function uniq(ex, get) {
+  const vals = ex.sets.map(get);
+  const set = [...new Set(vals.map(v => String(v ?? '')))];
+  return set.length === 1 ? set[0] : vals.map(v => (v ?? '—')).join('/');
+}
+
+function repsCell(ex) {
+  if (ex.mode === 'cardio') return setCore(ex, ex.sets[0] || {});
+  if (ex.mode === 'time') return uniq(ex, s => durShort(s.duration));
+  return fa(uniq(ex, s => s.reps ?? '—'));
+}
+
+function weightCell(ex) {
+  if (ex.sets.every(s => s.weight == null)) return '—';
+  return `${fa(uniq(ex, s => (s.weight != null ? num(s.weight) : '—')))}${ex.unit || 'kg'}`;
+}
+
+function restCell(block, ex) {
+  const v = [...new Set(ex.sets.map(s => s.rest).filter(Boolean))];
+  if (!v.length) return block.rest ? durShort(block.rest) : '—';
+  return v.map(durShort).join('/');
 }
 
 function deltaBadge(d) {
@@ -199,36 +334,6 @@ function deltaBadge(d) {
     return `<span class="delta ${up ? '' : 'down'}">${up ? '▲' : '▼'} ${fa(num(Math.abs(d.diff)))}</span>`;
   }
   return `<span class="delta">▲ ${fa(d.from)}→${fa(d.to)}</span>`;
-}
-
-export function exerciseSheet(ex) {
-  const img = safeUrl(ex.media?.image);
-  const vid = safeUrl(ex.media?.video);
-  sheet(ex.name, `
-    <div class="stack">
-      ${ex.sub || ex.muscle || ex.equipment ? `<div class="row wrap" style="gap:6px">
-        ${[ex.muscle, ex.equipment].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join('')}
-      </div>` : ''}
-      ${img ? `<img src="${esc(img)}" alt="${esc(ex.name)}" loading="lazy"
-        style="width:100%;border-radius:var(--r-md);border:1px solid var(--line)">` : ''}
-      ${ex.cue ? `<div class="hint"><b>فرم اجرا:</b> ${esc(ex.cue)}</div>` : ''}
-      ${ex.technique ? `<div class="hint"><b>${esc(TECH_LABEL[ex.technique.type] || ex.technique.type)}:</b> ${esc(techniqueText(ex.technique))}</div>` : ''}
-      ${ex.alternatives.length ? `<div>
-        <div class="small muted" style="margin-bottom:6px">حرکات جایگزین</div>
-        <div class="row wrap" style="gap:6px">${ex.alternatives.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</div>
-      </div>` : ''}
-      ${vid ? `<a class="btn block" href="${esc(vid)}" target="_blank" rel="noopener noreferrer">تماشای ویدیوی حرکت ↗</a>` : ''}
-    </div>`);
-}
-
-export function techniqueText(t) {
-  if (!t) return '';
-  if (t.type === 'drop') {
-    return t.drops.map((d, i) => `مرحلهٔ ${i + 1}: کاهش ${d.reduce ?? '—'} تا ${d.reps ?? 'ناتوانی'}`).join(' ← ');
-  }
-  if (t.type === 'restPause') return `${fa(t.pauses ?? 2)} وقفهٔ ${fa(t.rest ?? 15)} ثانیه‌ای تا ناتوانی`;
-  if (t.type === 'cluster') return `${fa(t.clusters ?? 4)} خوشهٔ ${fa(t.repsPer ?? 2)} تکراری با ${fa(t.rest ?? 20)} ثانیه مکث`;
-  return '';
 }
 
 function notFound() {

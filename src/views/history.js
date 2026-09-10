@@ -39,7 +39,8 @@ function sessionCard(s) {
         <h3 style="font-size:15px">${esc(s.dayName || 'جلسه')}</h3>
         <div class="small muted">${esc(new Date(s.startedAt).toLocaleDateString('fa-IR'))} · ${esc(s.programName || '')}</div>
       </div>
-      <div class="row" style="gap:6px">
+      <div class="row wrap" style="gap:6px;justify-content:flex-end">
+        ${s.partner ? `<span class="chip iris">👥 ${esc((s.athletes || []).join(' و '))}</span>` : ''}
         <span class="chip">${fa((s.entries || []).length)} ست</span>
         <span class="chip">${fa(mins)}′</span>
         ${volume ? `<span class="chip accent">${fa(Math.round(volume))}kg</span>` : ''}
@@ -53,11 +54,13 @@ function detail(id) {
   if (!s) return;
   const rows = (s.entries || []).map(e => `<tr>
     <td class="ex">${esc(e.exercise)}</td>
+    ${s.partner ? `<td class="n">${esc(e.athleteName || '—')}</td>` : ''}
     <td class="dose">${e.reps != null ? fa(e.reps) : '—'}${e.weight != null ? ` × ${fa(num(e.weight))}` : ''}</td>
   </tr>`).join('');
   sheet(s.dayName || 'جلسه', `
     <div class="tablewrap"><table class="plan">
-      <thead><tr><th class="ex">حرکت</th><th>ثبت‌شده</th></tr></thead><tbody>${rows}</tbody>
+      <thead><tr><th class="ex">حرکت</th>${s.partner ? '<th>ورزشکار</th>' : ''}<th>ثبت‌شده</th></tr></thead>
+      <tbody>${rows}</tbody>
     </table></div>
     <button class="btn block danger" style="margin-top:14px" data-del>حذف این جلسه</button>`,
     (b, close) => {

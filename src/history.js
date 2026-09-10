@@ -3,19 +3,22 @@ import { store } from './store.js';
 
 export const est1RM = (w, r) => (w && r ? w * (1 + r / 30) : 0);
 
-function entriesOf(name) {
+/** @param {string} [athlete] وقتی داده شود فقط رکوردهای همان ورزشکار برمی‌گردد */
+function entriesOf(name, athlete) {
   const out = [];
   store.sessions().forEach(s => {
     (s.entries || []).forEach(e => {
-      if (e.exercise === name) out.push({ ...e, sessionAt: s.startedAt, sessionId: s.id });
+      if (e.exercise !== name) return;
+      if (athlete && (e.athlete || 'a') !== athlete) return;
+      out.push({ ...e, sessionAt: s.startedAt, sessionId: s.id });
     });
   });
   return out;
 }
 
 /** بهترین ست آخرین جلسه‌ای که این حرکت در آن انجام شده */
-export function lastFor(name) {
-  const all = entriesOf(name);
+export function lastFor(name, athlete) {
+  const all = entriesOf(name, athlete);
   if (!all.length) return null;
   const latest = Math.max(...all.map(e => e.sessionAt || 0));
   const sameDay = all.filter(e => e.sessionAt === latest);
@@ -25,8 +28,8 @@ export function lastFor(name) {
 }
 
 /** رکورد شخصی: بیشترین وزنه و بیشترین ۱RM تخمینی */
-export function prFor(name) {
-  const all = entriesOf(name).filter(e => e.weight != null);
+export function prFor(name, athlete) {
+  const all = entriesOf(name, athlete).filter(e => e.weight != null);
   if (!all.length) return null;
   const byWeight = all.reduce((a, b) => (b.weight > a.weight ? b : a));
   const by1RM = all.reduce((a, b) => (est1RM(b.weight, b.reps) > est1RM(a.weight, a.reps) ? b : a));
@@ -34,9 +37,9 @@ export function prFor(name) {
 }
 
 /** آیا این ست رکورد جدید است؟ */
-export function isPR(name, weight, reps) {
+export function isPR(name, weight, reps, athlete) {
   if (weight == null) return false;
-  const pr = prFor(name);
+  const pr = prFor(name, athlete);
   if (!pr) return true;
   return weight > pr.weight || est1RM(weight, reps) > pr.e1rm + 0.01;
 }

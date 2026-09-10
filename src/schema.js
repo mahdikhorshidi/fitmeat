@@ -140,6 +140,16 @@ function checkExercise(ex, p, bad) {
   if (ex.intensity !== undefined && ex.oneRM === undefined) {
     bad(`${p}.oneRM`, 'وقتی «intensity» (درصد ۱RM) داده می‌شود، «oneRM» هم لازم است.');
   }
+  if (ex.media !== undefined) {
+    if (!isObj(ex.media)) bad(`${p}.media`, 'باید آبجکت با کلیدهای image/gif/video باشد.');
+    else {
+      ['image', 'gif', 'video'].forEach(k => {
+        if (ex.media[k] !== undefined && typeof ex.media[k] !== 'string') {
+          bad(`${p}.media.${k}`, 'باید نشانی (URL) متنی باشد.');
+        }
+      });
+    }
+  }
   if (ex.alternatives !== undefined && !Array.isArray(ex.alternatives)) {
     bad(`${p}.alternatives`, 'باید آرایه‌ای از نام حرکات جایگزین باشد.');
   }

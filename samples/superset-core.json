@@ -1,8 +1,12 @@
 {
   "schema": "fitmeat/v1",
   "name": "سوپرست بالاتنه + شکم و کشش",
-  "note": "جلسهٔ کوتاه و پرتراکم؛ مناسب باشگاه شلوغ.",
-  "defaults": { "rest": 75, "tempo": "2-0-1-0", "unit": "kg" },
+  "note": "جلسهٔ کوتاه و پرتراکم؛ مناسب باشگاه شلوغ و تمرین دونفره.",
+  "defaults": {
+    "rest": 75,
+    "tempo": "2-0-1-0",
+    "unit": "kg"
+  },
   "days": [
     {
       "id": "upper",
@@ -21,14 +25,23 @@
               "equipment": "دمبل",
               "reps": "10",
               "weight": 24,
-              "alternatives": ["پرس سینه هالتر", "شنا سوئدی"]
+              "alternatives": [
+                "پرس سینه هالتر",
+                "شنا سوئدی"
+              ],
+              "cue": "کتف جمع و قفل، آرنج حدود ۴۵ درجه از تنه، دمبل‌ها در بالا به هم نخورند."
             },
             {
               "name": "زیربغل دمبل تک‌دست",
               "muscle": "زیربغل",
               "equipment": "دمبل",
               "reps": "10",
-              "weight": 26
+              "weight": 26,
+              "cue": "آرنج نزدیک پهلو بکش؛ تنه را نچرخان.",
+              "alternatives": [
+                "قایقی",
+                "زیربغل سیم‌کش"
+              ]
             }
           ]
         },
@@ -38,8 +51,19 @@
           "rest": 75,
           "restBetweenExercises": 10,
           "exercises": [
-            { "name": "نشر جانب", "muscle": "سرشانه", "equipment": "دمبل", "reps": "15", "weight": 8 },
-            { "name": "پشت‌بازو دیپ روی نیمکت", "muscle": "پشت‌بازو", "equipment": "بدن", "reps": "12" }
+            {
+              "name": "نشر جانب",
+              "muscle": "سرشانه",
+              "equipment": "دمبل",
+              "reps": "15",
+              "weight": 8
+            },
+            {
+              "name": "پشت‌بازو دیپ روی نیمکت",
+              "muscle": "پشت‌بازو",
+              "equipment": "بدن",
+              "reps": "12"
+            }
           ]
         },
         {
@@ -48,9 +72,24 @@
           "rest": 45,
           "restBetweenExercises": 10,
           "exercises": [
-            { "name": "پلانک ساعد", "mode": "time", "muscle": "شکم", "duration": 45, "cue": "لگن جمع، بدن یک خط." },
-            { "name": "کوهنورد", "mode": "time", "muscle": "شکم", "duration": 30 },
-            { "name": "درازنشست قیچی", "muscle": "شکم", "reps": "20" }
+            {
+              "name": "پلانک ساعد",
+              "mode": "time",
+              "muscle": "شکم",
+              "duration": 45,
+              "cue": "لگن جمع، بدن یک خط."
+            },
+            {
+              "name": "کوهنورد",
+              "mode": "time",
+              "muscle": "شکم",
+              "duration": 30
+            },
+            {
+              "name": "درازنشست قیچی",
+              "muscle": "شکم",
+              "reps": "20"
+            }
           ]
         },
         {
@@ -60,9 +99,24 @@
           "restBetweenExercises": 5,
           "note": "کشش پایانی — هر حرکت یک‌بار.",
           "exercises": [
-            { "name": "کشش سینه کنار دیوار", "mode": "time", "muscle": "کشش", "duration": 30 },
-            { "name": "کشش زیربغل نشسته", "mode": "time", "muscle": "کشش", "duration": 30 },
-            { "name": "کشش گربه-شتر", "mode": "time", "muscle": "کشش", "duration": 40 }
+            {
+              "name": "کشش سینه کنار دیوار",
+              "mode": "time",
+              "muscle": "کشش",
+              "duration": 30
+            },
+            {
+              "name": "کشش زیربغل نشسته",
+              "mode": "time",
+              "muscle": "کشش",
+              "duration": 30
+            },
+            {
+              "name": "کشش گربه-شتر",
+              "mode": "time",
+              "muscle": "کشش",
+              "duration": 40
+            }
           ]
         }
       ]
