@@ -1,12 +1,14 @@
 // کش کردن فایل‌های اپ برای کار آفلاین در باشگاه
-const VERSION = 'fitmeat-v1';
+const VERSION = 'fitmeat-v2';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest', './assets/styles.css',
   './src/app.js', './src/router.js', './src/store.js', './src/schema.js', './src/util.js',
   './src/resolve.js', './src/progression.js', './src/condense.js', './src/plates.js',
-  './src/history.js', './src/timer.js', './src/ui.js',
+  './src/history.js', './src/timer.js', './src/ui.js', './src/theme.js',
+  './src/exdb.js', './src/muscles.js', './src/anim.js', './src/daily.js',
   './src/views/shell.js', './src/views/library.js', './src/views/program.js',
   './src/views/gym.js', './src/views/editor.js', './src/views/history.js', './src/views/settings.js',
+  './src/views/exercise.js',
   './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
   './samples/push-pull-legs.json', './samples/superset-core.json', './samples/cardio-intervals.json',
 ];

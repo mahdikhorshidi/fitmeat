@@ -17,6 +17,13 @@ const DEFAULT_SETTINGS = {
   vibrate: true,
   wakeLock: true,
   tempoCue: true,
+  theme: 'auto',                 // auto | light | dark
+  partner: false,                // تمرین دونفره روی یک گوشی
+  athletes: [                    // نام‌ها در تنظیمات ویرایش می‌شوند
+    { id: 'a', name: 'ورزشکار ۱' },
+    { id: 'b', name: 'ورزشکار ۲' },
+  ],
+  showAdvice: true,              // کارت توصیهٔ روزانه
 };
 
 function read(key, fallback) {

@@ -152,3 +152,70 @@ export function estimateDuration(day) {
 export function countSets(day) {
   return day.blocks.reduce((n, b) => n + b.exercises.reduce((m, e) => m + e.sets.length, 0), 0);
 }
+
+/* ---------- «واحد»های اجرا: پایهٔ مود باشگاه ---------- */
+
+const kindOf = ex => (ex.mode === 'cardio' ? 'cardio' : ex.mode === 'time' ? 'time' : 'reps');
+
+/**
+ * روز → لیست «واحد»ها. هر واحد یک صفحه در باشگاه است:
+ *   بلوک تکی    → هر ست یک واحد با یک حرکت.
+ *   سوپرست/سیرکویت → هر «دور» یک واحد با همهٔ حرکات آن دور، تا در یک صفحه دیده شوند.
+ */
+export function flattenUnits(day) {
+  const units = [];
+  day.blocks.forEach(block => {
+    if (block.type === 'single') {
+      block.exercises.forEach((ex, ei) => {
+        ex.sets.forEach((set, si) => {
+          units.push({
+            key: `${ex.key}#${si}`,
+            blockIndex: block.index, blockType: 'single', blockNote: block.note || '',
+            round: si, rounds: ex.sets.length,
+            restAfter: set.rest ?? block.rest ?? 0,
+            restBetween: 0,
+            items: [{ ex, ei, set, mark: markOf(block.index, ei, 'single'), kind: kindOf(ex) }],
+          });
+        });
+      });
+    } else {
+      const rounds = block.rounds || 1;
+      for (let r = 0; r < rounds; r++) {
+        units.push({
+          key: `b${block.index}#${r}`,
+          blockIndex: block.index, blockType: block.type, blockNote: block.note || '',
+          round: r, rounds,
+          restAfter: block.rest ?? 0,
+          restBetween: block.restBetweenExercises ?? 0,
+          items: block.exercises.map((ex, ei) => ({
+            ex, ei,
+            set: ex.sets[Math.min(r, ex.sets.length - 1)],
+            mark: markOf(block.index, ei, block.type),
+            kind: kindOf(ex),
+          })),
+        });
+      }
+    }
+  });
+  return units;
+}
+
+/** تخمین ثانیهٔ کارِ یک آیتم (بدون استراحت) */
+export function itemWork(item) {
+  if (item.kind === 'reps') {
+    const n = Number(String(item.set.reps).split(/[-–]/).pop()) || 10;
+    return Math.max(20, n * 4);
+  }
+  if (item.kind === 'time') return item.set.duration || 45;
+  const iv = item.ex.intervals;
+  if (iv) return iv.rounds * ((iv.work?.duration || 0) + (iv.recover?.duration || 0));
+  return item.set.duration || 60;
+}
+
+/** تخمین ثانیهٔ یک واحد برای n ورزشکار (در تمرین دونفره کار دو نفر موازیِ استراحت هم است) */
+export function unitDuration(unit, athletes = 1) {
+  const work = unit.items.reduce((s, it) => s + itemWork(it), 0) * athletes;
+  const between = unit.restBetween * Math.max(0, unit.items.length - 1);
+  const after = athletes > 1 ? Math.max(0, unit.restAfter - work / unit.items.length) : unit.restAfter;
+  return work + between + after;
+}

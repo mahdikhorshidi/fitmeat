@@ -45,6 +45,12 @@ export function durShort(sec) {
   return s < 60 ? `${fa(s)}ث` : clock(s);
 }
 
+/** زمان ساعتِ روز: «۱۸:۴۵» */
+export function clockOfDay(ts) {
+  const d = new Date(ts);
+  return fa(`${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`);
+}
+
 export const uid = () => Math.random().toString(36).slice(2, 10);
 export const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
