@@ -1,0 +1,132 @@
+{
+  "schema": "fitmeat/v1",
+  "name": "روز دوم — زیربغل و سرشانه",
+  "note": "گرم‌کردن با الپتیکال، یک سیرکویت هوازی/شکم، تمرین اصلی زیربغل و سرشانه، و پایان با تردمیل شیب‌دار.",
+  "defaults": { "rest": 60, "unit": "kg" },
+  "days": [
+    {
+      "id": "day2",
+      "name": "روز دوم",
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 1,
+          "rest": 60,
+          "note": "گرم کردن",
+          "exercises": [
+            {
+              "name": "الپتیکال",
+              "mode": "cardio",
+              "muscle": "هوازی",
+              "equipment": "الپتیکال",
+              "duration": 600,
+              "cue": "شدت سبک تا متوسط، فقط برای گرم شدن."
+            }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 4,
+          "rest": 60,
+          "restBetweenExercises": 60,
+          "note": "هوازی — بین هر حرکت و هر دور ۱ دقیقه استراحت.",
+          "exercises": [
+            { "name": "مسگر", "muscle": "شکم", "equipment": "بدن", "reps": 200 },
+            { "name": "شکم پاروئی", "muscle": "شکم", "equipment": "بدن", "reps": 25 },
+            { "name": "پلانک", "mode": "time", "muscle": "شکم", "equipment": "بدن", "duration": 30, "cue": "لگن جمع، بدن یک خط." }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "note": "تمرین",
+          "exercises": [
+            {
+              "name": "زیربغل H موازی",
+              "muscle": "زیربغل",
+              "equipment": "دستگاه",
+              "reps": 10,
+              "cue": "تک‌تک و جفت — طبق برنامه اجرا شود."
+            }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [
+            { "name": "لت دست دوبل", "muscle": "زیربغل", "equipment": "دستگاه لت", "reps": 10 }
+          ]
+        },
+        {
+          "type": "superset",
+          "rounds": 3,
+          "rest": 60,
+          "restBetweenExercises": 0,
+          "exercises": [
+            { "name": "فیله رو زمین", "muscle": "فیله کمر", "equipment": "بدن", "reps": 15 },
+            { "name": "لت دست متوسط", "muscle": "زیربغل", "equipment": "دستگاه لت", "reps": 10 }
+          ]
+        },
+        {
+          "type": "superset",
+          "rounds": 3,
+          "rest": 60,
+          "restBetweenExercises": 0,
+          "exercises": [
+            { "name": "دمبل جفت خم", "muscle": "زیربغل", "equipment": "دمبل", "reps": 10 },
+            {
+              "name": "فلای بک دو حالته",
+              "muscle": "پشت سرشانه",
+              "equipment": "دستگاه",
+              "reps": 7,
+              "cue": "دو حالته — ۷ تکرار در هر حالت."
+            }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [
+            { "name": "نشر از جانب", "muscle": "سرشانه", "equipment": "دمبل", "reps": 10 }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [
+            { "name": "پرس دمبل موازی", "muscle": "سرشانه", "equipment": "دمبل", "reps": 10 }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 2,
+          "rest": 60,
+          "exercises": [
+            { "name": "نشر رو به رو دمبل", "muscle": "سرشانه", "equipment": "دمبل", "reps": 10 }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 1,
+          "rest": 0,
+          "note": "پایان جلسه",
+          "exercises": [
+            {
+              "name": "تردمیل",
+              "mode": "cardio",
+              "muscle": "هوازی",
+              "equipment": "تردمیل",
+              "duration": 1200,
+              "speed": 6,
+              "incline": 6
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

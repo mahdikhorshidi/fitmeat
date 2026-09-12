@@ -42,7 +42,7 @@ src/timer.js            تایمرها، صدا، ویبره، Wake Lock
 src/ui.js src/router.js کامپوننت‌های مشترک و روتر هش‌محور
 src/views/              صفحات: کتابخانه، برنامه/روز، باشگاه، ویرایشگر، تاریخچه، تنظیمات
 sw.js manifest.webmanifest icons/   لایهٔ PWA
-samples/                سه برنامهٔ نمونه
+samples/                برنامه‌های نمونه (شامل «روز دوم»)
 ```
 
 ## اسکیمای فایل برنامه (`fitmeat/v1`)
