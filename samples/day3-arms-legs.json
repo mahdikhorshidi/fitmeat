@@ -1,0 +1,148 @@
+{
+  "schema": "fitmeat/v1",
+  "name": "روز سوم — پشت بازو و پا",
+  "note": "گرم‌کردن با الپتیکال، سیرکویت شکم چهاردور، پشت بازو و پا، و حرکات اصلاحی/نگه‌داشتن در پایان.",
+  "defaults": { "rest": 60, "unit": "kg" },
+  "days": [
+    {
+      "id": "day3",
+      "name": "روز سوم",
+      "blocks": [
+        {
+          "type": "single",
+          "rounds": 1,
+          "rest": 60,
+          "note": "گرم کردن",
+          "exercises": [
+            {
+              "name": "الپتیکال",
+              "mode": "cardio",
+              "muscle": "هوازی",
+              "equipment": "الپتیکال",
+              "duration": 600,
+              "cue": "شدت سبک تا متوسط، فقط برای گرم شدن."
+            }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 4,
+          "rest": 60,
+          "restBetweenExercises": 30,
+          "note": "شکم",
+          "exercises": [
+            { "name": "شکم کرانچ", "muscle": "شکم", "equipment": "بدن", "reps": 30 },
+            { "name": "شکم پاروئی", "muscle": "شکم", "equipment": "بدن", "reps": 30 },
+            { "name": "پلانک شکم", "mode": "time", "muscle": "شکم", "equipment": "بدن", "duration": 60, "cue": "لگن جمع، بدن یک خط." }
+          ]
+        },
+        {
+          "type": "single",
+          "rest": 60,
+          "note": "تمرین",
+          "exercises": [
+            {
+              "name": "پشت بازو سیم‌کش ایستاده",
+              "muscle": "پشت بازو",
+              "equipment": "سیم‌کش",
+              "sets": [{ "reps": 15 }, { "reps": 10 }, { "reps": 10 }, { "reps": 8 }],
+              "cue": "هرمی — با افزایش وزنه در هر ست."
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "rounds": 3,
+          "rest": 60,
+          "restBetweenExercises": 0,
+          "exercises": [
+            { "name": "پشت بازو هالتر خوابیده", "muscle": "پشت بازو", "equipment": "هالتر", "reps": 10 },
+            { "name": "کیک بک دمبل پشت بازو", "muscle": "پشت بازو", "equipment": "دمبل", "reps": 10 }
+          ]
+        },
+        {
+          "type": "superset",
+          "rest": 60,
+          "restBetweenExercises": 0,
+          "exercises": [
+            {
+              "name": "داخل پا",
+              "muscle": "داخل پا",
+              "equipment": "دستگاه",
+              "sets": [{ "reps": 50 }, { "reps": 40 }, { "reps": 30 }, { "reps": 5 }]
+            },
+            {
+              "name": "پل باسن",
+              "muscle": "باسن",
+              "equipment": "بدن",
+              "sets": [{ "reps": 50 }, { "reps": 40 }, { "reps": 30 }, { "reps": 5 }]
+            }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 4,
+          "rest": 60,
+          "exercises": [
+            { "name": "پشت پا تک", "muscle": "پشت پا", "equipment": "دستگاه", "reps": 10, "cue": "هر پا جداگانه." }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "rest": 60,
+          "restBetweenExercises": 0,
+          "note": "جلو پا ۳ حالته — ۱۰ تکرار در هر حالت، بدون استراحت بین حالت‌ها.",
+          "exercises": [
+            { "name": "جلو پا — پنجه صاف", "muscle": "جلو پا", "equipment": "دستگاه", "reps": 10 },
+            { "name": "جلو پا — پنجه رو به داخل", "muscle": "جلو پا", "equipment": "دستگاه", "reps": 10 },
+            { "name": "جلو پا — پنجه رو به بیرون", "muscle": "جلو پا", "equipment": "دستگاه", "reps": 10 }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [
+            { "name": "پرس تک پا", "muscle": "پا", "equipment": "دستگاه پرس پا", "reps": 10, "cue": "هر پا جداگانه." }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 3,
+          "rest": 60,
+          "exercises": [
+            { "name": "ساق با دستگاه پرس پا", "muscle": "ساق", "equipment": "دستگاه پرس پا", "reps": 50 }
+          ]
+        },
+        {
+          "type": "single",
+          "rounds": 4,
+          "rest": 60,
+          "note": "حرکت اصلاحی کمر",
+          "exercises": [
+            {
+              "name": "حرکت اصلاحی کمر — دست و پای مخالف",
+              "muscle": "فیله کمر",
+              "equipment": "بدن",
+              "reps": 15,
+              "cue": "دست راست با پای چپ و برعکس؛ کمر بی‌حرکت."
+            }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "rest": 0,
+          "restBetweenExercises": 0,
+          "note": "مکث‌های پایانی — هر حرکت یک‌بار.",
+          "exercises": [
+            { "name": "مکث — پای چپ توی شکم", "mode": "time", "muscle": "کشش", "equipment": "بدن", "duration": 50 },
+            { "name": "مکث — پای راست توی شکم", "mode": "time", "muscle": "کشش", "equipment": "بدن", "duration": 50 },
+            { "name": "مکث — جفت پا توی شکم", "mode": "time", "muscle": "کشش", "equipment": "بدن", "duration": 60 }
+          ]
+        }
+      ]
+    }
+  ]
+}
