@@ -9,6 +9,7 @@ import { lastFor, prFor, isPR } from '../history.js';
 import { techniqueText } from './program.js';
 import { TECH_LABEL } from '../condense.js';
 import { weekOf } from './program.js';
+import { mountMedia } from '../media.js';
 
 let S = null;          // وضعیت جلسه (پایدار در localStorage)
 let steps = [];        // استپ‌های تخت‌شدهٔ روز
@@ -438,18 +439,18 @@ function subSheet(step, program, day) {
 
 function infoSheet(step) {
   const ex = step.ex;
-  const img = safeUrl(ex.media?.image), vid = safeUrl(ex.media?.video);
+  const vid = safeUrl(ex.media?.video);
   sheet(nameOf(step), `<div class="stack">
     <div class="row wrap" style="gap:6px">
       ${[ex.muscle, ex.equipment].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join('')}
       ${step.set.tempo ? `<span class="chip">تمپو ${fa(step.set.tempo)}</span>` : ''}
       ${step.restAfter ? `<span class="chip">استراحت ${esc(dur(step.restAfter))}</span>` : ''}
     </div>
-    ${img ? `<img src="${esc(img)}" alt="${esc(nameOf(step))}" loading="lazy" style="width:100%;border-radius:var(--r-md);border:1px solid var(--line)">` : ''}
+    <div data-media></div>
     ${ex.cue ? `<div class="hint"><b>فرم اجرا:</b> ${esc(ex.cue)}</div>` : ''}
     ${ex.technique ? `<div class="hint"><b>${esc(TECH_LABEL[ex.technique.type] || '')}:</b> ${esc(techniqueText(ex.technique))}</div>` : ''}
     ${vid ? `<a class="btn block" href="${esc(vid)}" target="_blank" rel="noopener noreferrer">تماشای ویدیو ↗</a>` : ''}
-  </div>`);
+  </div>`, body => mountMedia(body, ex, nameOf(step)));
 }
 
 function platesSheet(step, override) {

@@ -252,3 +252,12 @@ table.plan th.ex{position:sticky;inset-inline-start:0;background:var(--surface-2
 .toast.bad{border-color:#4a2626;color:#ffb4b4}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* تصویر حرکت از منبع بیرونی */
+.ex-media { margin: 0; display: grid; gap: 6px; }
+.ex-media img {
+  width: 100%; display: block; background: var(--surface-2);
+  max-height: 46vh; object-fit: contain;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+}
+.ex-media figcaption { text-align: left; direction: ltr; }

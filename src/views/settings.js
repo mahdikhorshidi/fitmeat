@@ -31,6 +31,16 @@ export function settingsView() {
         ${toggle('tempoCue', 'شمارندهٔ صوتی تمپو', s.tempoCue)}
       </div>
 
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:6px">تصویر حرکات</h3>
+        ${toggle('exerciseImages', 'بارگذاری تصویر از wger.de', s.exerciseImages)}
+        <p class="small muted" style="margin-top:8px">وقتی روشن باشد، تصویر هر حرکت مستقیم از
+          <a href="https://wger.de" target="_blank" rel="noopener noreferrer">wger.de</a>
+          (منبع متن‌باز، تصاویر CC BY-SA) گرفته و نمایش داده می‌شود؛ فقط نام انگلیسی حرکت به آن سایت فرستاده می‌شود.
+          خاموش کنید تا اپ هیچ درخواستی به بیرون نفرستد.</p>
+        <button class="btn block" id="clear-media" style="margin-top:10px">پاک‌کردن کش تصاویر</button>
+      </div>
+
       <div class="card stack">
         <h3 style="font-size:15px">پشتیبان‌گیری</h3>
         <p class="small muted">همهٔ داده‌ها فقط در همین مرورگر ذخیره می‌شوند؛ پاک‌کردن داده‌های سایت آن‌ها را حذف می‌کند.</p>
@@ -56,6 +66,11 @@ export function settingsView() {
     store.saveSettings({ [el.dataset.toggle]: e.target.checked });
   });
 
+  $('#clear-media').onclick = () => {
+    localStorage.removeItem('fitmeat.media.v1');
+    toast('کش تصاویر پاک شد');
+  };
+
   $('#export').onclick = () => {
     download(`fitmeat-backup-${new Date().toISOString().slice(0, 10)}.json`,
       JSON.stringify(store.exportAll(), null, 2));
@@ -73,7 +88,8 @@ export function settingsView() {
   };
   $('#wipe').onclick = async () => {
     if (await confirmSheet('پاک‌کردن همه‌چیز', 'برنامه‌ها، تاریخچه و تنظیمات حذف می‌شوند. اول خروجی بگیرید.', { danger: true, okText: 'پاک کن' })) {
-      ['fitmeat.programs', 'fitmeat.sessions', 'fitmeat.settings', 'fitmeat.activeProgramId', 'fitmeat.liveSession']
+      ['fitmeat.programs', 'fitmeat.sessions', 'fitmeat.settings', 'fitmeat.activeProgramId',
+       'fitmeat.liveSession', 'fitmeat.media.v1']
         .forEach(k => localStorage.removeItem(k));
       location.hash = '/'; location.reload();
     }

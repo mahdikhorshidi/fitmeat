@@ -5,6 +5,7 @@ import { resolveProgram, estimateDuration, countSets } from '../resolve.js';
 import { condenseBlock, mergeBlocks, weekDeltas, TECH_LABEL } from '../condense.js';
 import { esc, fa, num, dur, safeUrl } from '../util.js';
 import { sheet, toast } from '../ui.js';
+import { mountMedia } from '../media.js';
 
 const weekState = new Map();
 export const weekOf = id => weekState.get(id) || 1;
@@ -202,15 +203,13 @@ function deltaBadge(d) {
 }
 
 export function exerciseSheet(ex) {
-  const img = safeUrl(ex.media?.image);
   const vid = safeUrl(ex.media?.video);
   sheet(ex.name, `
     <div class="stack">
       ${ex.sub || ex.muscle || ex.equipment ? `<div class="row wrap" style="gap:6px">
         ${[ex.muscle, ex.equipment].filter(Boolean).map(t => `<span class="chip">${esc(t)}</span>`).join('')}
       </div>` : ''}
-      ${img ? `<img src="${esc(img)}" alt="${esc(ex.name)}" loading="lazy"
-        style="width:100%;border-radius:var(--r-md);border:1px solid var(--line)">` : ''}
+      <div data-media></div>
       ${ex.cue ? `<div class="hint"><b>فرم اجرا:</b> ${esc(ex.cue)}</div>` : ''}
       ${ex.technique ? `<div class="hint"><b>${esc(TECH_LABEL[ex.technique.type] || ex.technique.type)}:</b> ${esc(techniqueText(ex.technique))}</div>` : ''}
       ${ex.alternatives.length ? `<div>
@@ -218,7 +217,7 @@ export function exerciseSheet(ex) {
         <div class="row wrap" style="gap:6px">${ex.alternatives.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</div>
       </div>` : ''}
       ${vid ? `<a class="btn block" href="${esc(vid)}" target="_blank" rel="noopener noreferrer">تماشای ویدیوی حرکت ↗</a>` : ''}
-    </div>`);
+    </div>`, body => mountMedia(body, ex));
 }
 
 export function techniqueText(t) {

@@ -1,14 +1,15 @@
 // کش کردن فایل‌های اپ برای کار آفلاین در باشگاه
-const VERSION = 'fitmeat-v1';
+const VERSION = 'fitmeat-v2';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest', './assets/styles.css',
   './src/app.js', './src/router.js', './src/store.js', './src/schema.js', './src/util.js',
   './src/resolve.js', './src/progression.js', './src/condense.js', './src/plates.js',
-  './src/history.js', './src/timer.js', './src/ui.js',
+  './src/history.js', './src/timer.js', './src/ui.js', './src/media.js',
   './src/views/shell.js', './src/views/library.js', './src/views/program.js',
   './src/views/gym.js', './src/views/editor.js', './src/views/history.js', './src/views/settings.js',
   './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
   './samples/push-pull-legs.json', './samples/superset-core.json', './samples/cardio-intervals.json',
+  './samples/day2-back-shoulders.json', './samples/day3-arms-legs.json',
 ];
 
 self.addEventListener('install', e => {
@@ -23,6 +24,8 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // درخواست‌های بیرونی (تصویر حرکات) دست‌نخورده به شبکه می‌روند
+  if (new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
     caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
       const copy = res.clone();

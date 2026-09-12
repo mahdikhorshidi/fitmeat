@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   vibrate: true,
   wakeLock: true,
   tempoCue: true,
+  exerciseImages: true,
 };
 
 function read(key, fallback) {
